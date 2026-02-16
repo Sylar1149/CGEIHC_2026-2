@@ -1,0 +1,21 @@
+# ===== Visual Studio =====
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+
+# ===== Builds =====
+Debug/
+x86/
+
+# ===== CMake (si se usa) =====
+build/
+glm/
+include/
+lib/
+shaders/
+
+# ===== Temporales =====
+*.log
+*.tmp
