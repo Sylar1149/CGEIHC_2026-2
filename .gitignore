@@ -15,6 +15,7 @@ glm/
 include/
 lib/
 shaders/
+P0CGEIHC/x64
 
 # ===== Temporales =====
 *.log
@@ -25,3 +26,4 @@ shaders/
 *.filters
 *.vcxproj
 *.cpp
+!segundo_main.cpp
