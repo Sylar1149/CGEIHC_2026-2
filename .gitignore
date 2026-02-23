@@ -9,7 +9,7 @@
 Debug/
 x86/
 
-# ===== CMake (si se usa) =====
+# ===== CMake =====
 build/
 glm/
 include/
@@ -19,3 +19,9 @@ shaders/
 # ===== Temporales =====
 *.log
 *.tmp
+*.sln
+*.dll
+*.h
+*.filters
+*.vcxproj
+*.cpp
