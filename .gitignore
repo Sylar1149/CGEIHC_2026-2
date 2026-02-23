@@ -15,7 +15,7 @@ glm/
 include/
 lib/
 shaders/
-P0CGEIHC/x64
+*/P0CGEIHC/x64
 
 # ===== Temporales =====
 *.log
@@ -26,3 +26,4 @@ P0CGEIHC/x64
 *.filters
 *.vcxproj
 *.cpp
+!practica2.cpp
