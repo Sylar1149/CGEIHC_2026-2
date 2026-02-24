@@ -14,7 +14,6 @@ build/
 glm/
 include/
 lib/
-shaders/
 */P0CGEIHC/x64
 
 # ===== Temporales =====
@@ -26,4 +25,12 @@ shaders/
 *.filters
 *.vcxproj
 *.cpp
+*.vert
+*.frag
 !practica2.cpp
+!solid.vert
+!solid_rojo.frag
+!solid_verde.frag
+!solid_azul.frag
+!solid_cafe.frag
+!solid_verde_oscuro.frag
