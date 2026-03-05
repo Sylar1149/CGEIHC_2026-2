@@ -24,7 +24,7 @@
 using std::vector;
 
 //Dimensiones de la ventana
-const float toRadians = 3.14159265f/180.0; //grados a radianes
+const float toRadians = 3.14159265f / 180.0; //grados a radianes
 const float PI = 3.14159265f;
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -86,24 +86,22 @@ void CrearCubo()
 void CrearPiramideTriangular()
 {
 	unsigned int indices_piramide_triangular[] = {
+			1,0,3,
 			0,1,2,
 			1,3,2,
-			3,0,2,
-			1,0,3
-
+			3,0,2
 	};
 	GLfloat vertices_piramide_triangular[] = {
-		-0.5f, -0.5f,0.0f,	//0
-		0.5f,-0.5f,0.0f,	//1
-		0.0f,0.5f, -0.25f,	//2
-		0.0f,-0.5f,-0.5f,	//3
-
+		-0.5f,	 0.0f,	 0.5f,	//0
+		 0.5f,	 0.0f,	 0.5f,	//1
+		 0.0f,	 1.0f,	 0.00001f,	//2
+		 0.0f,	 0.0f,	-0.5f,	//3
 	};
 	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices_piramide_triangular, indices_piramide_triangular, 12, 12);
 	meshList.push_back(obj1);
-
 }
+
 /*
 Crear cilindro, cono y esferas con arreglos dinámicos vector creados en el Semestre 2023 - 1 : por Sánchez Pérez Omar Alejandro
 */
@@ -125,8 +123,8 @@ void CrearCilindro(int res, float R) {
 		}
 		//caso para terminar el círculo
 		else {
-			x = R * cos((0)*dt);
-			z = R * sin((0)*dt);
+			x = R * cos((0) * dt);
+			z = R * sin((0) * dt);
 		}
 		for (i = 0; i < 6; i++) {
 			switch (i) {
@@ -194,19 +192,19 @@ void CrearCilindro(int res, float R) {
 	for (i = 0; i < vertices.size(); i++) indices.push_back(i);
 
 	//se genera el mesh del cilindro
-	Mesh *cilindro = new Mesh();
+	Mesh* cilindro = new Mesh();
 	cilindro->CreateMeshGeometry(vertices, indices, vertices.size(), indices.size());
 	meshList.push_back(cilindro);
 }
 
 //función para crear un cono
-void CrearCono(int res,float R) {
+void CrearCono(int res, float R) {
 
 	//constantes utilizadas en los ciclos for
 	int n, i;
 	//cálculo del paso interno en la circunferencia y variables que almacenarán cada coordenada de cada vértice
 	GLfloat dt = 2 * PI / res, x, z, y = -0.5f;
-	
+
 	vector<GLfloat> vertices;
 	vector<unsigned int> indices;
 
@@ -214,7 +212,7 @@ void CrearCono(int res,float R) {
 	vertices.push_back(0.0);
 	vertices.push_back(0.5);
 	vertices.push_back(0.0);
-	
+
 	//ciclo for para crear los vértices de la circunferencia del cono
 	for (n = 0; n <= (res); n++) {
 		x = R * cos((n)*dt);
@@ -238,10 +236,10 @@ void CrearCono(int res,float R) {
 	vertices.push_back(R * sin(0) * dt);
 
 
-	for (i = 0; i < res+2; i++) indices.push_back(i);
+	for (i = 0; i < res + 2; i++) indices.push_back(i);
 
 	//se genera el mesh del cono
-	Mesh *cono = new Mesh();
+	Mesh* cono = new Mesh();
 	cono->CreateMeshGeometry(vertices, indices, vertices.size(), res + 2);
 	meshList.push_back(cono);
 }
@@ -265,16 +263,44 @@ void CrearPiramideCuadrangular()
 		-0.5f,-0.5f,0.5f,
 		0.0f,0.5f,0.0f,
 	};
-	Mesh *piramide = new Mesh();
+	Mesh* piramide = new Mesh();
 	piramide->CreateMeshGeometry(piramidecuadrangular_vertices, piramidecuadrangular_indices, 15, 18);
 	meshList.push_back(piramide);
 }
 
+void CrearTrianguloDerechoInvertido()
+{
+	unsigned int indices_lado_triangular[] = {
+			0,1,2,
+	};
+	GLfloat vertices_lado_triangular[] = {
+		 0.00f,	 -1.f,	 0.5f,	//0 frente
+		 0.5f,	 0.0f,	 0.0f,	//1 punta
+		 0.50f,	 -1.0f,	-0.5f,	//2 tras
+	};
+	Mesh* obj1 = new Mesh();
+	obj1->CreateMesh(vertices_lado_triangular, indices_lado_triangular, 9, 9);
+	meshList.push_back(obj1);
+}
 
+void CrearTrianguloIzquierdoInvertido()
+{
+	unsigned int indices_lado_izq_triangular[] = {
+			0,1,2,
+	};
+	GLfloat vertices_lado_izq_triangular[] = {
+		 -0.5f,	 1.f,	 0.5f,	//0 frente
+		 -0.5f,	  0.0f,	 0.0f,	//1 punta
+		 0.0f, 1.0f,	-0.5f,	//2 tras
+	};
+	Mesh* obj1 = new Mesh();
+	obj1->CreateMesh(vertices_lado_izq_triangular, indices_lado_izq_triangular, 9, 9);
+	meshList.push_back(obj1);
+}
 
 void CreateShaders()
 {
-	Shader *shader1 = new Shader();
+	Shader* shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
 
@@ -295,9 +321,11 @@ int main()
 	CrearCilindro(5, 1.0f);//índice 2 en MeshList
 	CrearCono(25, 2.0f);//índice 3 en MeshList
 	CrearPiramideCuadrangular();//índice 4 en MeshList
+	CrearTrianguloDerechoInvertido(); //indice 5 en MeshList
+	CrearTrianguloIzquierdoInvertido(); //indice 6 en MeshList
 	CreateShaders();
-	
-	
+
+
 
 	/*Cámara se usa el comando: glm::lookAt(vector de posición, vector de orientación, vector up));
 	En la clase Camera se reciben 5 datos:
@@ -312,25 +340,25 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.3f);
 
-	
+
 	GLuint uniformProjection = 0;
 	GLuint uniformModel = 0;
 	GLuint uniformView = 0;
 	GLuint uniformColor = 0;
-	glm::mat4 projection = glm::perspective(glm::radians(60.0f)	,mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(60.0f), mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 	//glm::mat4 projection = glm::ortho(-1, 1, -1, 1, 1, 10);
-	
+
 	//Loop mientras no se cierra la ventana
 	sp.init(); //inicializar esfera
 	sp.load();//enviar la esfera al shader
 
 	glm::mat4 model(1.0);//Inicializar matriz de Modelo 4x4
 
-	glm::vec3 color = glm::vec3(0.0f,0.0f,0.0f); //inicializar Color para enviar a variable Uniform;
+	glm::vec3 color = glm::vec3(0.0f, 0.0f, 0.0f); //inicializar Color para enviar a variable Uniform;
 
 	while (!mainWindow.getShouldClose())
 	{
-		
+
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
@@ -342,34 +370,34 @@ int main()
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
 		//Limpiar la ventana
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Se agrega limpiar el buffer de profundidad
 		shaderList[0].useShader();
 		uniformModel = shaderList[0].getModelLocation();
 		uniformProjection = shaderList[0].getProjectLocation();
 		uniformView = shaderList[0].getViewLocation();
 		uniformColor = shaderList[0].getColorLocation();
-		
-		model = glm::mat4(1.0);
-		//Traslación inicial para posicionar en -Z a los objetos
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f));
+
+		//model = glm::mat4(1.0);
+		////Traslación inicial para posicionar en -Z a los objetos
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f));
 		//otras transformaciones para el objeto
 		//model = glm::scale(model, glm::vec3(0.5f,0.5f,0.5f));
-		model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
-		model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));		
-		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotay()), glm::vec3(0.0f, 1.0f, 0.0f));  //al presionar la tecla Y se rota sobre el eje y
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotaz()), glm::vec3(0.0f, 0.0f, 1.0f));
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		////la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
 		//se programe cambio entre proyección ortogonal y perspectiva
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-		color = glm::vec3(1.0f, 0.0f, 1.0f);
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color)); //para cambiar el color del objetos
-		//meshList[3]->RenderMesh(); //dibuja cubo y pirámide triangular
-		//meshList[0]->RenderMeshGeometry(); //dibuja las figuras geométricas cilindro, cono, pirámide base cuadrangular
-		//sp.render(); //dibuja esfera
-		
-		
+		//color = glm::vec3(1.0f, 0.0f, 1.0f);
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color)); //para cambiar el color del objetos
+		////meshList[3]->RenderMesh(); //dibuja cubo y pirámide triangular
+		////meshList[0]->RenderMeshGeometry(); //dibuja las figuras geométricas cilindro, cono, pirámide base cuadrangular
+		////sp.render(); //dibuja esfera
+
+
 		/*
 		//ejercicio: Instanciar primitivas geométricas para recrear el dibujo de la práctica pasada en 3D,
 		//se requiere que exista piso y la casa tiene una ventana azul circular justo en medio de la pared trasera y solo 1 puerta frontal.
@@ -388,127 +416,462 @@ int main()
 		// EJERCICIO EN CLASE: Casita 3D
 		// ================================
 
-		// dibujar un mesh con color
-		auto DrawMesh = [&](int meshIndex, glm::vec3 col,
-			glm::vec3 pos, glm::vec3 scl,
-			glm::vec3 rotDeg = glm::vec3(0.0f))
-			{
-				color = col;
-				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		//// dibujar un mesh con color
+		//auto DrawMesh = [&](int meshIndex, glm::vec3 col,
+		//	glm::vec3 pos, glm::vec3 scl,
+		//	glm::vec3 rotDeg = glm::vec3(0.0f))
+		//	{
+		//		color = col;
+		//		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
-				model = glm::mat4(1.0f);
-				model = glm::translate(model, pos);
+		//		model = glm::mat4(1.0f);
+		//		model = glm::translate(model, pos);
 
-				if (rotDeg.x != 0.0f)
-					model = glm::rotate(model, glm::radians(rotDeg.x), glm::vec3(1, 0, 0));
-				if (rotDeg.y != 0.0f)
-					model = glm::rotate(model, glm::radians(rotDeg.y), glm::vec3(0, 1, 0));
-				if (rotDeg.z != 0.0f)
-					model = glm::rotate(model, glm::radians(rotDeg.z), glm::vec3(0, 0, 1));
+		//		if (rotDeg.x != 0.0f)
+		//			model = glm::rotate(model, glm::radians(rotDeg.x), glm::vec3(1, 0, 0));
+		//		if (rotDeg.y != 0.0f)
+		//			model = glm::rotate(model, glm::radians(rotDeg.y), glm::vec3(0, 1, 0));
+		//		if (rotDeg.z != 0.0f)
+		//			model = glm::rotate(model, glm::radians(rotDeg.z), glm::vec3(0, 0, 1));
 
-				model = glm::scale(model, scl);
+		//		model = glm::scale(model, scl);
 
-				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
-				// Selección del tipo de render
-				if (meshIndex == 0 || meshIndex == 4)
-				{
-					// Cubo y Pirámide triangular
-					meshList[meshIndex]->RenderMesh();
-				}
-				else
-				{
-					// Cilindro, Cono y Pirámide cuadrangular
-					meshList[meshIndex]->RenderMeshGeometry();
-				}
-			};
+		//		// Selección del tipo de render
+		//		if (meshIndex == 0 || meshIndex == 4)
+		//		{
+		//			// Cubo y Pirámide triangular
+		//			meshList[meshIndex]->RenderMesh();
+		//		}
+		//		else
+		//		{
+		//			// Cilindro, Cono y Pirámide cuadrangular
+		//			meshList[meshIndex]->RenderMeshGeometry();
+		//		}
+		//	};
 
-		// Dibujar esfera con color
-		auto DrawSphere = [&](glm::vec3 col, glm::vec3 pos, glm::vec3 scl)
-			{
-				color = col;
-				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		//// Dibujar esfera con color
+		//auto DrawSphere = [&](glm::vec3 col, glm::vec3 pos, glm::vec3 scl)
+		//	{
+		//		color = col;
+		//		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
-				model = glm::mat4(1.0f);
-				model = glm::translate(model, pos);
-				model = glm::scale(model, scl);
+		//		model = glm::mat4(1.0f);
+		//		model = glm::translate(model, pos);
+		//		model = glm::scale(model, scl);
 
-				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-				sp.render();
-			};
+		//		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//		sp.render();
+		//	};
 
-		// ---- Parámetros de escena ----
-		glm::vec3 housePos(0.0f, 0.0f, -8.0f);     // centro aproximado de la casa
-		glm::vec3 houseScale(4.0f, 4.0f, 4.0f);    // tamaño del cubo-casa
+		//// ---- Parámetros de escena ----
+		//glm::vec3 housePos(0.0f, 0.0f, -8.0f);     // centro aproximado de la casa
+		//glm::vec3 houseScale(4.0f, 4.0f, 4.0f);    // tamaño del cubo-casa
 
-		// Colores
-		glm::vec3 colRed(1.0f, 0.0f, 0.0f);
-		glm::vec3 colBlue(0.0f, 0.0f, 1.0f);
-		glm::vec3 colGreen(0.0f, 1.0f, 0.0f);
-		glm::vec3 colBrown(0.478f, 0.255f, 0.067f);
-		glm::vec3 colDarkGreen(0.0039f, 0.4980f, 0.0078f);
+		//// Colores
+		//glm::vec3 colRed(1.0f, 0.0f, 0.0f);
+		//glm::vec3 colBlue(0.0f, 0.0f, 1.0f);
+		//glm::vec3 colGreen(0.0f, 1.0f, 0.0f);
+		//glm::vec3 colBrown(0.478f, 0.255f, 0.067f);
+		//glm::vec3 colDarkGreen(0.0039f, 0.4980f, 0.0078f);
 
-		// ---- Piso (cubo plano) ----
-		DrawMesh(
-			0,                          // cubo
-			glm::vec3(0.85f, 0.85f, 0.85f), // gris claro (piso)
-			glm::vec3(0.0f, -2.2f, -8.0f),
-			glm::vec3(30.0f, 0.2f, 30.0f)
-		);
+		//// ---- Piso (cubo plano) ----
+		//DrawMesh(
+		//	0,                          // cubo
+		//	glm::vec3(0.85f, 0.85f, 0.85f), // gris claro (piso)
+		//	glm::vec3(0.0f, -2.2f, -8.0f),
+		//	glm::vec3(30.0f, 0.2f, 30.0f)
+		//);
 
-		// ---- Cuerpo de la casa (cubo rojo) ----
-		DrawMesh(
-			0,
-			colRed,
-			housePos,
-			houseScale
-		);
+		//// ---- Cuerpo de la casa (cubo rojo) ----
+		//DrawMesh(
+		//	0,
+		//	colRed,
+		//	housePos,
+		//	houseScale
+		//);
 
-		// ---- Techo (pirámide cuadrangular azul) ----
-		// Se coloca encima del cubo
-		DrawMesh(
-			4,                 // pirámide cuadrangular
-			colBlue,
-			housePos + glm::vec3(0.0f, 3.2f, 0.0f),
-			glm::vec3(4.6f, 2.8f, 4.6f)
-		);
+		//// ---- Techo (pirámide cuadrangular azul) ----
+		//// Se coloca encima del cubo
+		//DrawMesh(
+		//	4,                 // pirámide cuadrangular
+		//	colBlue,
+		//	housePos + glm::vec3(0.0f, 3.2f, 0.0f),
+		//	glm::vec3(4.6f, 2.8f, 4.6f)
+		//);
 
-		// ---- Puerta (frontal) ----
-		DrawMesh(
-			0,
-			colGreen,
-			housePos + glm::vec3(0.0f, -1.2f, 1.95f),   
-			glm::vec3(1.1f, 1.8f, 0.15f)                 
-		);
+		//// ---- Puerta (frontal) ----
+		//DrawMesh(
+		//	0,
+		//	colGreen,
+		//	housePos + glm::vec3(0.0f, -1.2f, 1.95f),
+		//	glm::vec3(1.1f, 1.8f, 0.15f)
+		//);
 
-		// ---- Ventanas frontales ----
-		DrawMesh(0, colGreen, housePos + glm::vec3(-1.3f, 1.0f, 1.95f), glm::vec3(1.0f, 1.0f, 0.15f));
-		DrawMesh(0, colGreen, housePos + glm::vec3(1.3f, 1.0f, 1.95f), glm::vec3(1.0f, 1.0f, 0.15f));
+		//// ---- Ventanas frontales ----
+		//DrawMesh(0, colGreen, housePos + glm::vec3(-1.3f, 1.0f, 1.95f), glm::vec3(1.0f, 1.0f, 0.15f));
+		//DrawMesh(0, colGreen, housePos + glm::vec3(1.3f, 1.0f, 1.95f), glm::vec3(1.0f, 1.0f, 0.15f));
 
-		// ---- Ventanas laterales ----
-		// Derecha (x positiva)
-		DrawMesh(0, colGreen, housePos + glm::vec3(1.95f, 1.0f, -1.0f), glm::vec3(0.15f, 1.0f, 1.0f));
-		DrawMesh(0, colGreen, housePos + glm::vec3(1.95f, 1.0f, 1.0f), glm::vec3(0.15f, 1.0f, 1.0f));
+		//// ---- Ventanas laterales ----
+		//// Derecha (x positiva)
+		//DrawMesh(0, colGreen, housePos + glm::vec3(1.95f, 1.0f, -1.0f), glm::vec3(0.15f, 1.0f, 1.0f));
+		//DrawMesh(0, colGreen, housePos + glm::vec3(1.95f, 1.0f, 1.0f), glm::vec3(0.15f, 1.0f, 1.0f));
 
-		// Izquierda (x negativa)
-		DrawMesh(0, colGreen, housePos + glm::vec3(-1.95f, 1.0f, -1.0f), glm::vec3(0.15f, 1.0f, 1.0f));
-		DrawMesh(0, colGreen, housePos + glm::vec3(-1.95f, 1.0f, 1.0f), glm::vec3(0.15f, 1.0f, 1.0f));
+		//// Izquierda (x negativa)
+		//DrawMesh(0, colGreen, housePos + glm::vec3(-1.95f, 1.0f, -1.0f), glm::vec3(0.15f, 1.0f, 1.0f));
+		//DrawMesh(0, colGreen, housePos + glm::vec3(-1.95f, 1.0f, 1.0f), glm::vec3(0.15f, 1.0f, 1.0f));
 
-		// ---- Ventana circular azul trasera (al centro de la pared de atrás) ----
-		DrawSphere(
-			colBlue,
-			housePos + glm::vec3(0.0f, 0.4f, -2.05f),
-			glm::vec3(0.9f, 0.9f, 0.08f)
-		);
+		//// ---- Ventana circular azul trasera (al centro de la pared de atrás) ----
+		//DrawSphere(
+		//	colBlue,
+		//	housePos + glm::vec3(0.0f, 0.4f, -2.05f),
+		//	glm::vec3(0.9f, 0.9f, 0.08f)
+		//);
 
-		// ---- Árboles ----
-		// Árbol izquierdo
-		DrawMesh(2, colBrown, glm::vec3(-8.0f, -1.0f, -7.0f), glm::vec3(0.6f, 2.0f, 0.6f));
-		DrawMesh(3, colDarkGreen, glm::vec3(-8.0f, 0.8f, -7.0f), glm::vec3(1.8f, 2.2f, 1.8f));
+		//// ---- Árboles ----
+		//// Árbol izquierdo
+		//DrawMesh(2, colBrown, glm::vec3(-8.0f, -1.0f, -7.0f), glm::vec3(0.6f, 2.0f, 0.6f));
+		//DrawMesh(3, colDarkGreen, glm::vec3(-8.0f, 0.8f, -7.0f), glm::vec3(1.8f, 2.2f, 1.8f));
 
-		// Árbol derecho
-		DrawMesh(2, colBrown, glm::vec3(8.0f, -1.0f, -7.0f), glm::vec3(0.6f, 2.0f, 0.6f));
-		DrawMesh(3, colDarkGreen, glm::vec3(8.0f, 0.8f, -7.0f), glm::vec3(1.8f, 2.2f, 1.8f));
+		//// Árbol derecho
+		//DrawMesh(2, colBrown, glm::vec3(8.0f, -1.0f, -7.0f), glm::vec3(0.6f, 2.0f, 0.6f));
+		//DrawMesh(3, colDarkGreen, glm::vec3(8.0f, 0.8f, -7.0f), glm::vec3(1.8f, 2.2f, 1.8f));
+
+
+
+		// ================================
+		// EJERCICIO REPORTE: Pyraminx 3D
+		// ================================
+
+		// Piramide negra
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+
+		// Cara 1
+		// Superior
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.05f, 6.8f, -.01f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		// Medio
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(.1f, 3.6f, -.01f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[5]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(.1f, 3.6f, -1.6f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.7f, 3.6f, 1.6f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		// Inferior
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.7f, .4f, 1.5f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[5]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(3.25f, 0.4f, 3.1f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.65f, 0.4f, -0.1f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.12f, 0.4f, -3.25f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.15f, .4f, -1.7f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[5]->RenderMesh();
+
+
+		// Cara 2
+		// Superior
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-0.05f, 6.8f, -.01f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		// Medio
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-0.2f, 3.4f, -1.68f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-0.2f, 3.4f, 0.00f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[6]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1.8f, 3.4f, 1.7f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		// Inferior
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-0.15f, 0.15f, -3.3f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1.75f, 0.15f, -0.02f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-3.4f, 0.15f, 3.3f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1.8f, 0.15f, 1.58f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[6]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-0.2f, 0.15f, -1.58f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 0.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[6]->RenderMesh();
+
+		// Cara 3
+		// Superior
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 6.8f, .15f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		// Medio
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 5.5f, 0.8f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, -54.6f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1.6f, 3.7f, 1.7f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.6f, 3.7f, 1.7f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		// Inferior
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.7f, 2.4f, 2.4f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, -54.6f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1.7f, 2.4f, 2.4f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, -54.6f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-3.3f, 0.4f, 3.35f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(3.3f, 0.4f, 3.35f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.4f, 3.35f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(1.0f, 0.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+
+		// Cara 4
+		// Superior
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -0.05f, -3.0f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		// Medio
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -0.05f, 0.15f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.6f, -0.05f, 0.15f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1.6f, -0.05f, 0.15f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		// Inferior
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -0.05f, 3.3f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(3.2f, -0.05f, 3.3f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-3.2f, -0.05f, 3.3f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.6f, -0.05f, 3.3f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1.6f, -0.05f, 3.3f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::rotate(model, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.0f, 1.0f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[1]->RenderMesh();
 
 		glUseProgram(0);
 		mainWindow.swapBuffers();
@@ -516,5 +879,4 @@ int main()
 	return 0;
 }
 
-	
-		
+
