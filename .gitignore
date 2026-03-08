@@ -24,6 +24,7 @@ P4CGEIHC.tlog/
 *.sln
 *.dll
 *.h
+*.slnx
 *.obj
 *.filters
 *.vcxproj
