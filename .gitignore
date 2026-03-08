@@ -15,8 +15,8 @@ glm/
 include/
 lib/
 shaders/
-P3CGEIHC/P3CGEIHC/x64
-P3CGEIHC.tlog/
+P4CGEIHC/P4CGEIHC/x64
+P4CGEIHC.tlog/
 
 # ===== Temporales =====
 *.log
