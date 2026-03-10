@@ -345,18 +345,81 @@ int main()
 
 		//Creacion de cabina
 		// 
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, 3.0f, -4.0f));
-		modelaux = model;
-		model = glm::scale(model, glm::vec3(4.0f, 2.0f, 3.0f));
+		// ================================
+		// EJERCICIO DE REPORTE 1 - CUERPO DE LA GRÚA (prisma rectangular)
+		// ================================
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 2.5f, -4.0f));
+		modelaux = model; // este sigue siendo el nodo padre del brazo
+		model = glm::scale(model, glm::vec3(6.0f, 2.0f, 3.0f));
+
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		//la línea de proyección solo se manda una vez a menos que en tiempo de ejecución
-		//se programe cambio entre proyección ortogonal y perspectiva
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+
+		color = glm::vec3(1.0f, 0.7f, 0.0f); // amarillo/naranja tipo maquinaria
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		meshList[0]->RenderMesh();
 
 
+		// ================================
+		// BASE DE LA GRÚA (pirámide cuadrangular)
+		// ================================
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.8f, -4.0f));
+		model = glm::scale(model, glm::vec3(5.5f, 1.8f, 4.0f));
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		color = glm::vec3(0.9f, 0.5f, 0.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		meshList[4]->RenderMesh();
+
+		// ================================
+		// 4 LLANTAS (cilindros)
+		// Cada una gira por separado
+		// ================================
+		color = glm::vec3(0.1f, 0.1f, 0.1f); // negro
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+
+		// Llanta 1: delantera izquierda
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-2.8f, 0.0f, -2.f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(mainWindow.getllanta1()), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.9f, 0.5f, 0.9f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		meshList[2]->RenderMeshGeometry();
+
+		// Llanta 2: trasera izquierda
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-2.8f, 0.0f, -6.f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(mainWindow.getllanta2()), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.9f, 0.5f, 0.9f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		meshList[2]->RenderMeshGeometry();
+
+		// Llanta 3: delantera derecha
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(2.8f, 0.0f, -2.f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(mainWindow.getllanta3()), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.9f, 0.5f, 0.9f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		meshList[2]->RenderMeshGeometry();
+
+		// Llanta 4: trasera derecha
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(2.8f, 0.0f, -6.f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(mainWindow.getllanta4()), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.9f, 0.5f, 0.9f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		meshList[2]->RenderMeshGeometry();
 
 		// Creando el brazo de una grúa
 		//articulacion1 hasta articulación5 sólo son puntos de rotación o articulación, en este caso no dibujaremos esferas que los representen
@@ -508,6 +571,260 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		meshList[0]->RenderMesh();
 
+
+		// ================================
+		// EJERCICIO DE REPORTE 2 - ROBOT 3D
+		// ================================
+
+		glm::vec3 animalPos(12.0f, 2.0f, -8.0f);
+
+		auto DrawMesh = [&](int meshIndex, glm::vec3 col,
+			glm::mat4 parent,
+			glm::vec3 pos,
+			glm::vec3 scl,
+			glm::vec3 rotDeg = glm::vec3(0.0f))
+			{
+				color = col;
+				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+
+				glm::mat4 M = parent;
+				M = glm::translate(M, pos);
+
+				if (rotDeg.x != 0.0f)
+					M = glm::rotate(M, glm::radians(rotDeg.x), glm::vec3(1.0f, 0.0f, 0.0f));
+				if (rotDeg.y != 0.0f)
+					M = glm::rotate(M, glm::radians(rotDeg.y), glm::vec3(0.0f, 1.0f, 0.0f));
+				if (rotDeg.z != 0.0f)
+					M = glm::rotate(M, glm::radians(rotDeg.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+				M = glm::scale(M, scl);
+
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(M));
+
+				if (meshIndex == 0 || meshIndex == 1)
+					meshList[meshIndex]->RenderMesh();
+				else
+					meshList[meshIndex]->RenderMeshGeometry();
+			};
+
+		auto DrawSphere = [&](glm::vec3 col,
+			glm::mat4 parent,
+			glm::vec3 pos,
+			glm::vec3 scl)
+			{
+				color = col;
+				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+
+				glm::mat4 M = parent;
+				M = glm::translate(M, pos);
+				M = glm::scale(M, scl);
+
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(M));
+				sp.render();
+			};
+
+		// =====================================
+		// ANIMAL ROBOT 3D
+		// =====================================
+		glm::mat4 animalBase(1.0f);
+		animalBase = glm::translate(animalBase, glm::vec3(12.0f, 2.0f, -8.0f));
+
+		// cuerpo principal
+		DrawMesh(0, glm::vec3(0.75f, 0.75f, 0.75f),
+			animalBase,
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(4.5f, 2.5f, 2.0f));
+
+		// cuello
+		DrawMesh(0, glm::vec3(0.7f, 0.7f, 0.7f),
+			animalBase,
+			glm::vec3(-2.7f, 1.6f, 0.0f),
+			glm::vec3(1.2f, 1.6f, 1.2f),
+			glm::vec3(0.0f, 0.0f, -25.0f));
+
+		// cabeza
+		DrawMesh(0, glm::vec3(0.8f, 0.8f, 0.8f),
+			animalBase,
+			glm::vec3(-4.2f, 3.0f, 0.0f),
+			glm::vec3(2.2f, 1.6f, 1.5f));
+
+		// hocico (cilindro)
+		DrawMesh(2, glm::vec3(0.75f, 0.75f, 0.75f),
+			animalBase,
+			glm::vec3(-5.4f, 2.8f, 0.0f),
+			glm::vec3(0.8f, 1.2f, 0.8f),
+			glm::vec3(0.0f, 0.0f, 90.0f));
+
+		// orejas (pirámides)
+		DrawMesh(1, glm::vec3(0.2f, 0.2f, 0.2f),
+			animalBase,
+			glm::vec3(-4.5f, 4.3f, -0.5f),
+			glm::vec3(0.7f, 1.0f, 0.7f),
+			glm::vec3(0.0f, 0.0f, 15.0f));
+
+		DrawMesh(1, glm::vec3(0.2f, 0.2f, 0.2f),
+			animalBase,
+			glm::vec3(-4.5f, 4.3f, 0.5f),
+			glm::vec3(0.7f, 1.0f, 0.7f),
+			glm::vec3(0.0f, 0.0f, 15.0f));
+
+		// cola articulada
+		glm::mat4 colaBase = animalBase;
+		colaBase = glm::translate(colaBase, glm::vec3(2.2f, 0.9f, 0.0f));
+		colaBase = glm::rotate(colaBase, glm::radians(mainWindow.getcola()), glm::vec3(0.0f, 1.0f, 0.0f));
+		DrawMesh(3, glm::vec3(0.3f, 0.3f, 0.3f),
+			colaBase,
+			glm::vec3(0.7f, 0.3f, 0.0f),
+			glm::vec3(0.6f, 1.4f, 0.6f),
+			glm::vec3(0.0f, 0.0f, 90.0f));
+
+
+		// =====================================
+		// PATA 1
+		// =====================================
+		glm::mat4 pata1 = animalBase;
+		pata1 = glm::translate(pata1, glm::vec3(-1.6f, -1.5f, -0.9f));
+		pata1 = glm::rotate(pata1, glm::radians(mainWindow.getpata1a()), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		// articulación superior
+		DrawSphere(glm::vec3(0.9f, 0.9f, 0.9f), pata1, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.25f));
+
+		// parte superior
+		DrawMesh(0, glm::vec3(0.6f, 0.6f, 0.6f),
+			pata1,
+			glm::vec3(0.0f, -1.2f, 0.0f),
+			glm::vec3(0.5f, 2.0f, 0.5f));
+
+		// articulación inferior
+		glm::mat4 pata1b = pata1;
+		pata1b = glm::translate(pata1b, glm::vec3(0.0f, -2.2f, 0.0f));
+		pata1b = glm::rotate(pata1b, glm::radians(mainWindow.getpata1b()), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		DrawSphere(glm::vec3(0.9f, 0.9f, 0.9f), pata1b, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.22f));
+
+		// parte inferior
+		DrawMesh(0, glm::vec3(0.5f, 0.5f, 0.5f),
+			pata1b,
+			glm::vec3(0.0f, -1.0f, 0.0f),
+			glm::vec3(0.45f, 1.8f, 0.45f));
+
+		// pata/pezuña
+		DrawMesh(1, glm::vec3(0.15f, 0.15f, 0.15f),
+			pata1b,
+			glm::vec3(0.0f, -2.2f, 0.0f),
+			glm::vec3(0.8f, 0.5f, 0.8f),
+			glm::vec3(0.0f, 0.0f, -90.0f));
+
+
+		// =====================================
+		// PATA 2
+		// =====================================
+		glm::mat4 pata2 = animalBase;
+		pata2 = glm::translate(pata2, glm::vec3(-1.6f, -1.5f, 0.9f));
+		pata2 = glm::rotate(pata2, glm::radians(mainWindow.getpata2a()), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		// articulación superior
+		DrawSphere(glm::vec3(0.9f, 0.9f, 0.9f), pata2, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.25f));
+
+		// parte superior
+		DrawMesh(0, glm::vec3(0.6f, 0.6f, 0.6f),
+			pata2,
+			glm::vec3(0.0f, -1.2f, 0.0f),
+			glm::vec3(0.5f, 2.0f, 0.5f));
+
+		// articulación inferior
+		glm::mat4 pata2b = pata2;
+		pata2b = glm::translate(pata2b, glm::vec3(0.0f, -2.2f, 0.0f));
+		pata2b = glm::rotate(pata2b, glm::radians(mainWindow.getpata2b()), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		DrawSphere(glm::vec3(0.9f, 0.9f, 0.9f), pata2b, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.22f));
+
+		// parte inferior
+		DrawMesh(0, glm::vec3(0.5f, 0.5f, 0.5f),
+			pata2b,
+			glm::vec3(0.0f, -1.0f, 0.0f),
+			glm::vec3(0.45f, 1.8f, 0.45f));
+
+		// pata/pezuña
+		DrawMesh(1, glm::vec3(0.15f, 0.15f, 0.15f),
+			pata2b,
+			glm::vec3(0.0f, -2.2f, 0.0f),
+			glm::vec3(0.8f, 0.5f, 0.8f),
+			glm::vec3(0.0f, 0.0f, -90.0f));
+
+
+		// =====================================
+		// PATA 3
+		// =====================================
+		glm::mat4 pata3 = animalBase;
+		pata3 = glm::translate(pata3, glm::vec3(1.6f, -1.5f, -0.9f));
+		pata3 = glm::rotate(pata3, glm::radians(mainWindow.getpata3a()), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		// articulación superior
+		DrawSphere(glm::vec3(0.9f, 0.9f, 0.9f), pata3, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.25f));
+
+		// parte superior
+		DrawMesh(0, glm::vec3(0.6f, 0.6f, 0.6f),
+			pata3,
+			glm::vec3(0.0f, -1.2f, 0.0f),
+			glm::vec3(0.5f, 2.0f, 0.5f));
+
+		// articulación inferior
+		glm::mat4 pata3b = pata3;
+		pata3b = glm::translate(pata3b, glm::vec3(0.0f, -2.2f, 0.0f));
+		pata3b = glm::rotate(pata3b, glm::radians(mainWindow.getpata3b()), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		DrawSphere(glm::vec3(0.9f, 0.9f, 0.9f), pata3b, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.22f));
+
+		// parte inferior
+		DrawMesh(0, glm::vec3(0.5f, 0.5f, 0.5f),
+			pata3b,
+			glm::vec3(0.0f, -1.0f, 0.0f),
+			glm::vec3(0.45f, 1.8f, 0.45f));
+
+		// pata/pezuña
+		DrawMesh(1, glm::vec3(0.15f, 0.15f, 0.15f),
+			pata3b,
+			glm::vec3(0.0f, -2.2f, 0.0f),
+			glm::vec3(0.8f, 0.5f, 0.8f),
+			glm::vec3(0.0f, 0.0f, -90.0f));
+
+
+		// =====================================
+		// PATA 4
+		// =====================================
+		glm::mat4 pata4 = animalBase;
+		pata4 = glm::translate(pata4, glm::vec3(1.6f, -1.5f, 0.9f));
+		pata4 = glm::rotate(pata4, glm::radians(mainWindow.getpata4a()), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		// articulación superior
+		DrawSphere(glm::vec3(0.9f, 0.9f, 0.9f), pata4, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.25f));
+
+		// parte superior
+		DrawMesh(0, glm::vec3(0.6f, 0.6f, 0.6f),
+			pata4,
+			glm::vec3(0.0f, -1.2f, 0.0f),
+			glm::vec3(0.5f, 2.0f, 0.5f));
+
+		// articulación inferior
+		glm::mat4 pata4b = pata4;
+		pata4b = glm::translate(pata4b, glm::vec3(0.0f, -2.2f, 0.0f));
+		pata4b = glm::rotate(pata4b, glm::radians(mainWindow.getpata4b()), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		DrawSphere(glm::vec3(0.9f, 0.9f, 0.9f), pata4b, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.22f));
+
+		// parte inferior
+		DrawMesh(0, glm::vec3(0.5f, 0.5f, 0.5f),
+			pata4b,
+			glm::vec3(0.0f, -1.0f, 0.0f),
+			glm::vec3(0.45f, 1.8f, 0.45f));
+
+		// pata/pezuña
+		DrawMesh(1, glm::vec3(0.15f, 0.15f, 0.15f),
+			pata4b,
+			glm::vec3(0.0f, -2.2f, 0.0f),
+			glm::vec3(0.8f, 0.5f, 0.8f),
+			glm::vec3(0.0f, 0.0f, -90.0f));
 
 		glUseProgram(0);
 		mainWindow.swapBuffers();
