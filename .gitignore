@@ -30,3 +30,5 @@ P4CGEIHC.tlog/
 *.vcxproj
 *.cpp
 !practica4_conjerarquia.cpp
+!window.h
+!window.cpp
