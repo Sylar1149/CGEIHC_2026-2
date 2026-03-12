@@ -29,6 +29,5 @@ P4CGEIHC.tlog/
 *.filters
 *.vcxproj
 *.cpp
-!practica4_conjerarquia.cpp
-!window.h
+!Tarea3.cpp
 !window.cpp
