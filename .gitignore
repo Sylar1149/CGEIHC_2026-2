@@ -15,8 +15,8 @@ glm/
 include/
 lib/
 shaders/
-P4CGEIHC/P4CGEIHC/x64
-P4CGEIHC.tlog/
+P5CGEIHC/P5CGEIHC/x64
+P5CGEIHC.tlog/
 
 # ===== Temporales =====
 *.log
@@ -29,5 +29,18 @@ P4CGEIHC.tlog/
 *.filters
 *.vcxproj
 *.cpp
-!Tarea3.cpp
-!window.cpp
+!Window.cpp
+!Window.h
+!practica5.cpp
+!P5-1.obj
+!P5-2.obj
+!P5-3.obj
+!P5-4.obj
+!P5-5.obj
+!P5-6.obj
+!P5-1.mtl
+!P5-2.mtl
+!P5-3.mtl
+!P5-4.mtl
+!P5-5.mtl
+!P5-6.mtl
