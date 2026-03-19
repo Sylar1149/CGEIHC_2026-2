@@ -29,6 +29,14 @@ P5CGEIHC.tlog/
 *.filters
 *.vcxproj
 *.cpp
+*.obj
+*.mtl
+*.fbx
+*.png
+*.jpg
+*.tga
+*.3ds
+
 !Window.cpp
 !Window.h
 !practica5.cpp
