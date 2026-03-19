@@ -25,7 +25,10 @@ public:
 	GLfloat getpata2() { return pata2; }   // delantera izquierda
 	GLfloat getpata3() { return pata3; }   // trasera derecha
 	GLfloat getpata4() { return pata4; }   // trasera izquierda
-	GLfloat getcola() { return cola; }     // opcional, por si luego la agregas
+
+	GLfloat getautoX() { return autoX; }
+	GLfloat getrotLlantasAuto() { return rotLlantasAuto; }
+	GLfloat getcofre() { return cofre; }
 
 	bool getShouldClose() {
 		return glfwWindowShouldClose(mainWindow);
@@ -58,6 +61,10 @@ private:
 	GLfloat pata3;
 	GLfloat pata4;
 	GLfloat cola;
+
+	GLfloat autoX;
+	GLfloat rotLlantasAuto;
+	GLfloat cofre;
 
 	bool mouseFirstMoved;
 

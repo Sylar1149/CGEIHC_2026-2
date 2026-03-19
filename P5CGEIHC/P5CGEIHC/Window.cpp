@@ -46,6 +46,10 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	pata4 = 0.0f;
 	cola = 0.0f;
 
+	autoX = 0.0f;
+	rotLlantasAuto = 0.0f;
+	cofre = 0.0f;
+
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = false;
@@ -155,63 +159,95 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	// =========================
 
 	// Mandíbula inferior
-	if (key == GLFW_KEY_F && action == GLFW_PRESS)
+	if (key == GLFW_KEY_F)
 	{
 		if (theWindow->mandibula < 45.0f)
 			theWindow->mandibula += 5.0f;
 	}
-	if (key == GLFW_KEY_G && action == GLFW_PRESS)
+	if (key == GLFW_KEY_G)
 	{
 		if (theWindow->mandibula > 0.0f)
 			theWindow->mandibula -= 5.0f;
 	}
 
 	// Pata 1 - delantera derecha
-	if (key == GLFW_KEY_H && action == GLFW_PRESS)
+	if (key == GLFW_KEY_H && action)
 	{
 		if (theWindow->pata1 < 45.0f)
 			theWindow->pata1 += 5.0f;
 	}
-	if (key == GLFW_KEY_J && action == GLFW_PRESS)
+	if (key == GLFW_KEY_J)
 	{
 		if (theWindow->pata1 > -45.0f)
 			theWindow->pata1 -= 5.0f;
 	}
 
 	// Pata 2 - delantera izquierda
-	if (key == GLFW_KEY_K && action == GLFW_PRESS)
+	if (key == GLFW_KEY_K)
 	{
 		if (theWindow->pata2 < 45.0f)
 			theWindow->pata2 += 5.0f;
 	}
-	if (key == GLFW_KEY_L && action == GLFW_PRESS)
+	if (key == GLFW_KEY_L)
 	{
 		if (theWindow->pata2 > -45.0f)
 			theWindow->pata2 -= 5.0f;
 	}
 
 	// Pata 3 - trasera derecha
-	if (key == GLFW_KEY_B && action == GLFW_PRESS)
+	if (key == GLFW_KEY_B)
 	{
 		if (theWindow->pata3 < 45.0f)
 			theWindow->pata3 += 5.0f;
 	}
-	if (key == GLFW_KEY_N && action == GLFW_PRESS)
+	if (key == GLFW_KEY_N)
 	{
 		if (theWindow->pata3 > -45.0f)
 			theWindow->pata3 -= 5.0f;
 	}
 
 	// Pata 4 - trasera izquierda
-	if (key == GLFW_KEY_M && action == GLFW_PRESS)
+	if (key == GLFW_KEY_M)
 	{
 		if (theWindow->pata4 < 45.0f)
 			theWindow->pata4 += 5.0f;
 	}
-	if (key == GLFW_KEY_COMMA && action == GLFW_PRESS)
+	if (key == GLFW_KEY_COMMA)
 	{
 		if (theWindow->pata4 > -45.0f)
 			theWindow->pata4 -= 5.0f;
+	}
+
+	// =========================
+	// AUTO
+	// =========================
+	if (key == GLFW_KEY_1)
+	{
+		theWindow->autoX += 0.5f;
+	}
+	if (key == GLFW_KEY_2)
+	{
+		theWindow->autoX -= 0.5f;
+	}
+
+	if (key == GLFW_KEY_3)
+	{
+		theWindow->rotLlantasAuto += 10.0f;
+	}
+	if (key == GLFW_KEY_4)
+	{
+		theWindow->rotLlantasAuto -= 10.0f;
+	}
+
+	if (key == GLFW_KEY_5)
+	{
+		if (theWindow->cofre < 0.0f)
+			theWindow->cofre += 5.0f;
+	}
+	if (key == GLFW_KEY_6)
+	{
+		if (theWindow->cofre > -45.0f)
+			theWindow->cofre -= 5.0f;
 	}
 
 	// Guardar estado de teclas

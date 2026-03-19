@@ -42,6 +42,13 @@ Model Goddard_Pata2;
 Model Goddard_Pata3;
 Model Goddard_Pata4;
 
+Model Auto_Cuerpo;
+Model Auto_Llanta1;
+Model Auto_Llanta2;
+Model Auto_Llanta3;
+Model Auto_Llanta4;
+Model Auto_Cofre;
+
 Skybox skybox;
 
 //Sphere cabeza = Sphere(0.5, 20, 20);
@@ -140,6 +147,20 @@ int main()
 	Goddard_Pata2.LoadModel("Models/P5-3.obj");
 	Goddard_Pata3.LoadModel("Models/P5-4.obj");
 	Goddard_Pata4.LoadModel("Models/P5-5.obj");
+
+	Auto_Cuerpo = Model();
+	Auto_Llanta1 = Model();
+	Auto_Llanta2 = Model();
+	Auto_Llanta3 = Model();
+	Auto_Llanta4 = Model();
+	Auto_Cofre = Model();
+
+	Auto_Cuerpo.LoadModel("Models/P5-7.obj");
+	Auto_Llanta1.LoadModel("Models/P5-8.obj");
+	Auto_Llanta2.LoadModel("Models/P5-9.obj");
+	Auto_Llanta3.LoadModel("Models/P5-10.obj");
+	Auto_Llanta4.LoadModel("Models/P5-11.obj");
+	Auto_Cofre.LoadModel("Models/P5-12.obj");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
@@ -331,6 +352,84 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(pata4Model));
 		Goddard_Pata4.RenderModel();
 
+
+		// =======================================================
+		// EJERCICIO DE REPORTE - AUTO JERÁRQUICO
+		// =======================================================
+		color = glm::vec3(0.1f, 0.1f, 0.1f);
+
+		// =====================
+		// CUERPO DEL AUTO
+		// =====================
+		glm::mat4 autoBase = glm::mat4(1.0f);
+		autoBase = glm::rotate(autoBase, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		autoBase = glm::translate(autoBase, glm::vec3(12.0f, -1.6f, mainWindow.getautoX()));
+		autoBase = glm::scale(autoBase, glm::vec3(2.0f, 2.0f, 2.0f));
+		color = glm::vec3(0.53f, 0.81f, 0.98f); // azul cielo
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(autoBase));
+		Auto_Cuerpo.RenderModel();
+
+
+		// =====================
+		// COFRE
+		// =====================
+		glm::mat4 cofreBase = autoBase;
+
+		// mover al pivote del cofre
+		cofreBase = glm::translate(cofreBase, glm::vec3(0.0f, 1.0f, 1.0f));
+		cofreBase = glm::rotate(cofreBase,
+			glm::radians(mainWindow.getcofre()),
+			glm::vec3(1.0f, 0.0f, 0.0f));
+
+		// regresar modelo a su posición
+		glm::mat4 cofreModel = cofreBase;
+		cofreModel = glm::translate(cofreModel, glm::vec3(0.0f, 0.0f, 0.0f));
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(cofreModel));
+		Auto_Cofre.RenderModel();
+
+
+		// =====================
+		// LLANTAS
+		// =====================
+		float giroLlanta = mainWindow.getrotLlantasAuto();
+
+		// Llanta 1 - enfrente derecha
+		glm::mat4 llanta1Base = autoBase;
+		llanta1Base = glm::translate(llanta1Base, glm::vec3(-0.8f, 0.2f, 1.2f));
+		llanta1Base = glm::rotate(llanta1Base, glm::radians(giroLlanta), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 llanta1Model = llanta1Base;
+		llanta1Model = glm::translate(llanta1Model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta1Model));
+		Auto_Llanta1.RenderModel();
+
+		// Llanta 2 - enfrente izquierda
+		glm::mat4 llanta2Base = autoBase;
+		llanta2Base = glm::translate(llanta2Base, glm::vec3(0.8f, 0.2f, 1.2f));
+		llanta2Base = glm::rotate(llanta2Base, glm::radians(giroLlanta), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 llanta2Model = llanta2Base;
+		llanta2Model = glm::translate(llanta2Model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta2Model));
+		Auto_Llanta2.RenderModel();
+
+		// Llanta 3 - atrás derecha
+		glm::mat4 llanta3Base = autoBase;
+		llanta3Base = glm::translate(llanta3Base, glm::vec3(-0.8f, 0.2f, -1.2f));
+		llanta3Base = glm::rotate(llanta3Base, glm::radians(giroLlanta), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 llanta3Model = llanta3Base;
+		llanta3Model = glm::translate(llanta3Model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta3Model));
+		Auto_Llanta3.RenderModel();
+
+		// Llanta 4 - atrás izquierda
+		glm::mat4 llanta4Base = autoBase;
+		llanta4Base = glm::translate(llanta4Base, glm::vec3(0.8f, 0.2f, -1.2f));
+		llanta4Base = glm::rotate(llanta4Base, glm::radians(giroLlanta), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 llanta4Model = llanta4Base;
+		llanta4Model = glm::translate(llanta4Model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta4Model));
+		Auto_Llanta4.RenderModel();
 
 		glUseProgram(0);
 
