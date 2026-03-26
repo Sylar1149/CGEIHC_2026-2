@@ -42,10 +42,18 @@ Texture pisoTexture;
 Texture dadoTexture;
 Texture logofiTexture;
 Texture animalesTexture;
+Texture octaedroTexture;
 
 Model Kitt_M;
 Model Llanta_M;
 Model Dado_M;
+
+Model Auto_Cuerpo;
+Model Auto_Llanta1;
+Model Auto_Llanta2;
+Model Auto_Llanta3;
+Model Auto_Llanta4;
+Model Auto_Cofre;
 
 Skybox skybox;
 
@@ -249,6 +257,90 @@ void CrearDado()
 }
 
 
+void CrearOctaedro()
+{
+	// Octaedro = 8 caras triangulares
+	unsigned int octaedro_indices[] = {
+		// mitad superior
+		0, 1, 2,   // frente superior
+		3, 4, 5,   // derecha superior
+		6, 7, 8,   // atrás superior
+		9, 10, 11, // izquierda superior
+
+		// mitad inferior
+		12, 13, 14, // frente inferior
+		15, 16, 17, // derecha inferior
+		18, 19, 20, // atrás inferior
+		21, 22, 23  // izquierda inferior
+	};
+
+	GLfloat octaedro_vertices[] = {
+		// =====================================================
+		// CARA 1 - FRENTE SUPERIOR
+		// =====================================================
+		// x      y      z        u      v        nx ny nz
+		 0.0f,  1.0f,  0.0f,    0.33f, 0.20f,  0.0f, 0.0f, 0.0f,
+		-1.0f,  0.0f,  0.0f,    0.01f,  0.33f,  0.0f, 0.0f, 0.0f,
+		 0.0f,  0.0f,  1.0f,    0.01f,  0.1f,  0.0f, 0.0f, 0.0f,
+
+		 // =====================================================
+		 // CARA 2 - DERECHA SUPERIOR
+		 // =====================================================
+		  0.0f,  1.0f,  0.0f,    0.33f, 0.22f,  0.0f, 0.0f, 0.0f,
+		  0.0f,  0.0f,  1.0f,    0.33f,  0.60f,  0.0f, 0.0f, 0.0f,
+		  1.0f,  0.0f,  0.0f,    0.01f,  0.405f,  0.0f, 0.0f, 0.0f,
+
+		  // =====================================================
+		  // CARA 3 - ATRÁS SUPERIOR
+		  // =====================================================
+		   0.0f,  1.0f,  0.0f,    0.335f, 0.204f,  0.0f, 0.0f, 0.0f,
+		   1.0f,  0.0f,  0.0f,    0.66f,  0.41f,  0.0f, 0.0f, 0.0f,
+		   0.0f,  0.0f, -1.0f,    0.335f,  0.59f,  0.0f, 0.0f, 0.0f,
+
+		   // =====================================================
+		   // CARA 4 - IZQUIERDA SUPERIOR
+		   // =====================================================
+			0.0f,  1.0f,  0.0f,    0.333f, 0.206f,  0.0f, 0.0f, 0.0f,
+			0.0f,  0.0f, -1.0f,    0.66f,  0.02f,  0.0f, 0.0f, 0.0f,
+		   -1.0f,  0.0f,  0.0f,    0.66f,  0.40f,  0.0f, 0.0f, 0.0f,
+
+		   // =====================================================
+		   // CARA 5 - FRENTE INFERIOR
+		   // =====================================================
+			0.0f, -1.0f,  0.0f,    0.66f, 0.80f,  0.0f, 0.0f, 0.0f,
+			0.0f,  0.0f,  1.0f,    0.34f,  0.99f,  0.0f, 0.0f, 0.0f,
+		   -1.0f,  0.0f,  0.0f,    0.34f,  0.61f,  0.0f, 0.0f, 0.0f,
+
+		   // =====================================================
+		   // CARA 6 - DERECHA INFERIOR
+		   // =====================================================
+			0.0f, -1.0f,  0.0f,    0.666f, 0.802f,  0.0f, 0.0f, 0.0f,
+			1.0f,  0.0f,  0.0f,    0.34f,  0.61f,  0.0f, 0.0f, 0.0f,
+			0.0f,  0.0f,  1.0f,    0.666f,  0.42f,  0.0f, 0.0f, 0.0f,
+
+			// =====================================================
+			// CARA 7 - ATRÁS INFERIOR
+			// =====================================================
+			 0.0f, -1.0f,  0.0f,    0.66f, 0.80f,  0.0f, 0.0f, 0.0f,
+			 0.0f,  0.0f, -1.0f,    0.66f,  0.41f,  0.0f, 0.0f, 0.0f,
+			 1.0f,  0.0f,  0.0f,    0.98f,  0.61f,  0.0f, 0.0f, 0.0f,
+
+			 // =====================================================
+			 // CARA 8 - IZQUIERDA INFERIOR
+			 // =====================================================
+			  0.0f, -1.0f,  0.0f,    0.66f, 0.80f,  0.0f, 0.0f, 0.0f,
+			 -1.0f,  0.0f,  0.0f,    0.98f,  0.61f,  0.0f, 0.0f, 0.0f,
+			  0.0f,  0.0f, -1.0f,    0.98f,  0.98f,  0.0f, 0.0f, 0.0f,
+	};
+
+	// Calcula normales por cara
+	calcAverageNormals(octaedro_indices, 24, octaedro_vertices, 192, 8, 5);
+
+	Mesh* dado = new Mesh();
+	dado->CreateMesh(octaedro_vertices, octaedro_indices, 192, 24);
+	meshList.push_back(dado);
+}
+
 
 int main()
 {
@@ -258,6 +350,7 @@ int main()
 	CreateObjects();
 	CrearDado();
 	CreateShaders();
+	CrearOctaedro();
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
@@ -275,6 +368,8 @@ int main()
 	logofiTexture.LoadTextureA();
 	animalesTexture = Texture("Textures/dado_animales_modificado.tga");
 	animalesTexture.LoadTextureA();
+	octaedroTexture = Texture("Textures/OctaedroTexturizado.tga");
+	octaedroTexture.LoadTextureA();
 	
 	
 	Kitt_M = Model();
@@ -283,6 +378,20 @@ int main()
 	Llanta_M.LoadModel("Models/llanta_optimizada.obj");
 	Dado_M = Model();
 	Dado_M.LoadModel("Models/Dado_animales_texturizado.obj");
+
+	Auto_Cuerpo = Model();
+	Auto_Llanta1 = Model();
+	Auto_Llanta2 = Model();
+	Auto_Llanta3 = Model();
+	Auto_Llanta4 = Model();
+	Auto_Cofre = Model();
+
+	Auto_Cuerpo.LoadModel("Models/P6-7.obj");
+	Auto_Llanta1.LoadModel("Models/P6-8.obj");
+	Auto_Llanta2.LoadModel("Models/P6-9.obj");
+	Auto_Llanta3.LoadModel("Models/P6-10.obj");
+	Auto_Llanta4.LoadModel("Models/P6-11.obj");
+	Auto_Cofre.LoadModel("Models/P6-12.obj");
 	
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
@@ -362,55 +471,103 @@ int main()
 
 		
 		
-		/*Reporte de práctica :
-		Ejercicio 1: Crear un dado de 8 caras y texturizarlo por medio de código
-		Ejercicio 2: Importar el modelo de su coche con sus 4 llantas acomodadas
-		y tener texturizadas las 4 llantas (diferenciar caucho y rin)  y 
-		texturizar el logo de la Facultad de ingeniería en el cofre de su propio modelo de coche
+		//Reporte de práctica :
+		//Ejercicio 1: Crear un dado de 8 caras y texturizarlo por medio de código
+
+
+		// Dado de OpenGL - ahora será de 8 caras
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-10.0f, 4.5f, -2.0f));
+		model = glm::scale(model, glm::vec3(0.9f, 0.9f, 0.9f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+
+		octaedroTexture.UseTexture();
+		meshList[5]->RenderMesh();
+
+
+		//Ejercicio 2: Importar el modelo de su coche con sus 4 llantas acomodadas
+		//y tener texturizadas las 4 llantas (diferenciar caucho y rin)  y 
+		//texturizar el logo de la Facultad de ingeniería en el cofre de su propio modelo de coche
 	
-		*/
-		//Instancia del coche 
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f + mainWindow.getmuevex() , -0.5f, -3.0f));
-		modelaux = model;
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Kitt_M.RenderModel();
+		
 
-		//Llanta delantera izquierda
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(7.0f, -0.5f, 8.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
-		color = glm::vec3(0.5f, 0.5f, 0.5f);//llanta con color gris
+		color = glm::vec3(0.1f, 0.1f, 0.1f);
+
+		// =====================
+		// CUERPO DEL AUTO
+		// =====================
+		glm::mat4 autoBase = glm::mat4(1.0f);
+		autoBase = glm::rotate(autoBase, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		autoBase = glm::translate(autoBase, glm::vec3(12.0f, -1.6f, mainWindow.getautoX()));
+		autoBase = glm::scale(autoBase, glm::vec3(2.0f, 2.0f, 2.0f));
+		color = glm::vec3(1.0f, 1.0f, 1.0f);
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Llanta_M.RenderModel();
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(autoBase));
+		Auto_Cuerpo.RenderModel();
 
-		//Llanta trasera izquierda
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(15.5f, -0.5f, 8.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Llanta_M.RenderModel();
 
-		//Llanta delantera derecha
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(7.0f, -0.5f, 1.5f));
-		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Llanta_M.RenderModel();
+		// =====================
+		// COFRE
+		// =====================
+		glm::mat4 cofreBase = autoBase;
 
-		//Llanta trasera derecha
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(15.5f, -0.5f, 1.5f));
-		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Llanta_M.RenderModel();
+		// mover al pivote del cofre
+		cofreBase = glm::translate(cofreBase, glm::vec3(0.0f, 1.0f, 1.0f));
+		cofreBase = glm::rotate(cofreBase, -180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		cofreBase = glm::rotate(cofreBase,
+			glm::radians(mainWindow.getcofre()),
+			glm::vec3(1.0f, 0.0f, 0.0f));
+
+		// regresar modelo a su posición
+		glm::mat4 cofreModel = cofreBase;
+		cofreModel = glm::translate(cofreModel, glm::vec3(0.0f, 0.0f, 0.0f));
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(cofreModel));
+		Auto_Cofre.RenderModel();
+
+
+		// =====================
+		// LLANTAS
+		// =====================
+		float giroLlanta = mainWindow.getrotLlantasAuto();
+
+		// Llanta 1 - enfrente derecha
+		glm::mat4 llanta1Base = autoBase;
+		llanta1Base = glm::translate(llanta1Base, glm::vec3(-0.8f, 0.2f, 1.2f));
+		llanta1Base = glm::rotate(llanta1Base, glm::radians(giroLlanta), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 llanta1Model = llanta1Base;
+		llanta1Model = glm::translate(llanta1Model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta1Model));
+		Auto_Llanta1.RenderModel();
+
+		// Llanta 2 - enfrente izquierda
+		glm::mat4 llanta2Base = autoBase;
+		llanta2Base = glm::translate(llanta2Base, glm::vec3(0.8f, 0.2f, 1.2f));
+		llanta2Base = glm::rotate(llanta2Base, -180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		llanta2Base = glm::rotate(llanta2Base, glm::radians(giroLlanta), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 llanta2Model = llanta2Base;
+		llanta2Model = glm::translate(llanta2Model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta2Model));
+		Auto_Llanta2.RenderModel();
+
+		// Llanta 3 - atrás derecha
+		glm::mat4 llanta3Base = autoBase;
+		llanta3Base = glm::translate(llanta3Base, glm::vec3(-0.8f, 0.2f, -1.2f));
+		llanta3Base = glm::rotate(llanta3Base, glm::radians(giroLlanta), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 llanta3Model = llanta3Base;
+		llanta3Model = glm::translate(llanta3Model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta3Model));
+		Auto_Llanta3.RenderModel();
+
+		// Llanta 4 - atrás izquierda
+		glm::mat4 llanta4Base = autoBase;
+		llanta4Base = glm::translate(llanta4Base, glm::vec3(0.8f, 0.2f, -1.2f));
+		llanta4Base = glm::rotate(llanta4Base, -180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		llanta4Base = glm::rotate(llanta4Base, glm::radians(giroLlanta), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 llanta4Model = llanta4Base;
+		llanta4Model = glm::translate(llanta4Model, glm::vec3(0.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta4Model));
+		Auto_Llanta4.RenderModel();
 
 		glUseProgram(0);
 
