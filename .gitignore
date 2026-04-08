@@ -15,8 +15,8 @@ glm/
 include/
 lib/
 shaders/
-P6CGEIHC/P6CGEIHC/x64
-P6CGEIHC.tlog/
+P7CGEIHC/P7CGEIHC/x64
+P7CGEIHC.tlog/
 
 # ===== Temporales =====
 *.log
@@ -36,14 +36,11 @@ P6CGEIHC.tlog/
 *.jpg
 *.tga
 *.3ds
+*.zip
 
-!practica6.cpp
+!practica7.cpp
 !Window.h
 !Window.cpp
-!Dado_animales_texturizado.obj
-!Dado_animales_texturizado.mtl
-!Dado_animales_modificado.tga
-!OctaedroTexturizado.tga
 !Previo06-317119938.tga
 !P6-7.obj
 !P6-8.obj
