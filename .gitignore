@@ -37,6 +37,7 @@ P7CGEIHC.tlog/
 *.tga
 *.3ds
 *.zip
+*.bak
 
 !practica7.cpp
 !Window.h
