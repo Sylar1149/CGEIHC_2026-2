@@ -17,7 +17,7 @@ public:
 	GLfloat getrotLlantasAuto() { return rotLlantasAuto; }
 	GLfloat getcofre() { return cofre; }
 	GLfloat getEliX() { return EliX; }
-	GLfloat getEliY() { return EliY; }
+	GLfloat getEliZ() { return EliZ; }
 	GLfloat getmuevex() { return muevex; }
 	bool getShouldClose() {
 		return  glfwWindowShouldClose(mainWindow);}
@@ -39,8 +39,8 @@ private:
 	GLfloat autoX;
 	GLfloat rotLlantasAuto;
 	GLfloat cofre;
-   GLfloat EliX;
-	GLfloat EliY;
+    GLfloat EliX;
+	GLfloat EliZ;
 	bool mouseFirstMoved;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);
 	static void ManejaMouse(GLFWwindow* window, double xPos, double yPos);

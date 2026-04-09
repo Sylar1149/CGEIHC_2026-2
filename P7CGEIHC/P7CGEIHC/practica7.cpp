@@ -59,6 +59,7 @@ Model Auto_Llanta3;
 Model Auto_Llanta4;
 Model Auto_Cofre;
 
+Model Lamp_M;
 
 Skybox skybox;
 
@@ -315,6 +316,9 @@ int main()
 	Auto_Llanta4.LoadModel("Models/P6-11.obj");
 	Auto_Cofre.LoadModel("Models/P6-12.obj");
 
+	Lamp_M = Model();
+	Lamp_M.LoadModel("Models/Lamp.obj");
+
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
@@ -342,6 +346,13 @@ int main()
 		0.3f, 0.2f, 0.1f);
 	pointLightCount++;
 
+    // Otra luz puntual para la lámpara: luz puntual blanca 
+	pointLights[1] = PointLight(1.0f, 1.0f, 1.0f,   // blanca
+		4.0f, 3.0f,
+		18.0f, -0.7f, 25.0f,
+		1.0f, 0.09f, 0.032f);
+	pointLightCount++;
+
 	unsigned int spotLightCount = 0;
 	//linterna
 	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
@@ -365,7 +376,6 @@ int main()
 	spotLightCount++;
 
 	// Spotlight del helicóptero: seguirá la transformación del helicóptero y apuntará hacia -Y (hacia abajo)
- // hacer el foco del helicóptero amarillo
 	spotLights[2] = SpotLight(1.0f, 1.0f, 0.0f,
 		1.0f, 2.0f,
 		0.0f, 1.0f, 0.0f,
@@ -485,14 +495,14 @@ int main()
 		Llanta_M.RenderModel();
 
 		//Helicoptero
-     // Construir matriz jerárquica del helicóptero (equivalente a autoBase)
+		// Construir matriz jerárquica del helicóptero
 		glm::mat4 heliBase = glm::mat4(1.0f);
-		heliBase = glm::translate(heliBase, glm::vec3(mainWindow.getEliX(), 10.0f, mainWindow.getEliY()));
+		heliBase = glm::translate(heliBase, glm::vec3(mainWindow.getEliX(), 10.0f, mainWindow.getEliZ()));
 		heliBase = glm::scale(heliBase, glm::vec3(0.3f, 0.3f, 0.3f));
 		heliBase = glm::rotate(heliBase, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		heliBase = glm::rotate(heliBase, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
 
-		// Offset local para montar el foco relativo al pivote del helicóptero (por ejemplo bajo el fuselaje)
+		// Offset local para montar el foco relativo al pivote del helicóptero
 		glm::vec4 heliLocalOffset = glm::vec4(0.0f, -0.5f, 0.0f, 1.0f);
 		glm::vec4 heliPosWorld4 = heliBase * heliLocalOffset;
 		glm::vec3 heliPosWorld = glm::vec3(heliPosWorld4);
@@ -541,7 +551,7 @@ int main()
 		glm::vec4 localOffset = glm::vec4(0.6f, 0.7f, 1.45f, 1.0f);
 		glm::vec4 posWorld = autoBase * localOffset; // transforma el punto local a coordenadas mundo
 		glm::vec3 posCoche = glm::vec3(posWorld);
-		// Dirección local +Z del coche transformada por la matriz (w=0 para dirección)
+		// Dirección local +Z del coche transformada por la matriz
 		glm::vec4 dirWorld4 = autoBase * glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
 		glm::vec3 dirCoche = glm::normalize(glm::vec3(dirWorld4));
 		// Usar SetFlash (posición + dirección) para que el comportamiento sea equivalente a la linterna
@@ -614,6 +624,19 @@ int main()
 		llanta4Model = glm::translate(llanta4Model, glm::vec3(0.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llanta4Model));
 		Auto_Llanta4.RenderModel();
+
+
+		// Colocar el modelo Lamp
+		glm::mat4 lampModel = glm::mat4(1.0f);
+		glm::vec3 lampWorldPos = glm::vec3(18.0f, -0.7f, 25.0f);
+		lampModel = glm::translate(lampModel, lampWorldPos);
+		lampModel = glm::scale(lampModel, glm::vec3(7.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(lampModel));
+		Lamp_M.RenderModel();
+		// Actualizar la posición de la luz puntual blanca (pointLights[1]) usando un offset local
+		glm::vec4 lampLocalOffset = glm::vec4(0.0f, 20.0f, -4.0f, 1.0f); // ajusta el offset local según sea necesario para que el foco quede en la posición deseada respecto a la lámpara
+		glm::vec3 pointPosWorld = lampWorldPos + glm::vec3(lampLocalOffset);
+		pointLights[1].SetPos(pointPosWorld);
 
 		glUseProgram(0);
 

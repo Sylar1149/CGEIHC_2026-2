@@ -18,7 +18,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	cofre = 0.0f;
 	muevex = 2.0f;
 	EliX = 0.0f;
-	EliY = 0.0f;
+	EliZ = 0.0f;
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -165,11 +165,11 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	if (key == GLFW_KEY_9)
 	{
-		theWindow->EliY += 5.0f;
+		theWindow->EliZ += 5.0f;
 	}
 	if (key == GLFW_KEY_0)
 	{
-		theWindow->EliY -= 5.0f;
+		theWindow->EliZ -= 5.0f;
 	}
 
 	if (key >= 0 && key < 1024)
