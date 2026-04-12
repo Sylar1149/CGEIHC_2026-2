@@ -39,9 +39,13 @@ P7CGEIHC.tlog/
 *.zip
 *.bak
 
+!Light.h
+!Shader_light.cpp
 !practica7.cpp
 !Window.h
 !Window.cpp
+!PointLight.cpp
+!PointLight.h
 !Previo06-317119938.tga
 !P6-7.obj
 !P6-8.obj
@@ -58,3 +62,4 @@ P7CGEIHC.tlog/
 !Lamp.obj
 !Lamp.mtl
 !militar_colors.tga
+!Dado_animales_modificado.tga
