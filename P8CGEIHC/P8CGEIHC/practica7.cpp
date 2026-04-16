@@ -62,6 +62,10 @@ Model Auto_Cofre;
 
 Model Lamp_M;
 
+Model foco_pez;
+Model antena_pez;
+Model cuerpo_pez;
+
 Skybox skybox;
 
 //materiales
@@ -303,6 +307,12 @@ int main()
 	Llanta_M.LoadModel("Models/llanta_optimizada.obj");
 	Blackhawk_M = Model();
 	Blackhawk_M.LoadModel("Models/uh60.obj");
+	antena_pez = Model();
+	antena_pez.LoadModel("Models/antena_pez.obj");
+	foco_pez = Model();
+	foco_pez.LoadModel("Models/foco_pez.obj");
+	cuerpo_pez = Model();
+	cuerpo_pez.LoadModel("Models/cuerpo_pez.obj");
 	
 
 	Auto_Cuerpo = Model();
@@ -373,7 +383,7 @@ int main()
 		1.0f, 3.0f,        // ambient y diffuse
 		0.25f, 0.45f, 1.70f,   // posición inicial
 		0.0f, 1.0f, 0.0f,  // dirección inicial temporal
-		1.0f, 0.0f, 0.0f,// atenuación
+      1.0f, 0.09f, 0.02f,// atenuación (menos deslumbrante a distancia)
 		25.0f               // ángulo del faro
 	);
 	spotLightCount++;
@@ -383,9 +393,22 @@ int main()
 		1.0f, 2.0f,
 		0.0f, 1.0f, 0.0f,
 		0.0f, 1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
+       1.0f, 0.09f, 0.02f,
 		30.0f);
 	spotLightCount++;
+
+	// Segundo spotlight para el helicóptero (iluminación opuesta) - inicializado igual pero será activado según dirección
+	spotLights[3] = SpotLight(1.0f, 1.0f, 0.0f,
+		1.0f, 2.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+       1.0f, 0.09f, 0.02f,
+		30.0f);
+	spotLightCount++;
+
+	// Iniciar con spotlights apagados
+	spotLights[2].SetEnabled(false);
+	spotLights[3].SetEnabled(false);
 
 
 //se crean mas luces puntuales y spotlight 
@@ -404,6 +427,8 @@ std::vector<glm::vec3> carSpotColors = {
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
+    // track previous helicopter X to detect movement direction
+	float prevEliX = mainWindow.getEliX();
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
@@ -524,8 +549,49 @@ std::vector<glm::vec3> carSpotColors = {
 		// Dirección local -Y transformada por la matriz (w=0 para dirección)
 		glm::vec4 heliDirWorld4 = heliBase * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
 		glm::vec3 heliDirWorld = glm::normalize(glm::vec3(heliDirWorld4));
-		// Actualizar spotlight del helicóptero para que siga la jerarquía y apunte hacia -Y
-		spotLights[2].SetFlash(heliPosWorld, heliDirWorld);
+        // Actualizar spotlight del helicóptero (se elegirán 2 spotlights según dirección de movimiento)
+
+		glm::vec3 heliForward = glm::normalize(glm::vec3(heliDirWorld));
+
+		// Detectar movimiento de x del helicotero
+		float currEliX = mainWindow.getEliX();
+		float deltaEliX = currEliX - prevEliX;
+        const float eps = 0.01f; 
+        if (deltaEliX < -eps) {
+			// Movimiento por X negativa
+			glm::vec3 forwardDir = glm::normalize(glm::vec3(-1.0f, -0.3f, 0.0f));
+			spotLights[2].SetFlash(heliPosWorld, forwardDir);
+			spotLights[2].SetEnabled(true);
+			spotLights[3].SetEnabled(false);
+			mainWindow.heliLastDir = 1; // Recordar la ultima direccion hacia el frente
+        } else if (deltaEliX > eps) {
+			// Movimiento por X positiva
+			glm::vec3 backDir = glm::normalize(glm::vec3(1.0f, -0.3f, 0.0f));
+			spotLights[3].SetFlash(heliPosWorld, backDir);
+			spotLights[3].SetEnabled(true);
+			spotLights[2].SetEnabled(false);
+			mainWindow.heliLastDir = -1; // Recordar la ultima posición hacia atras
+		} else {
+			// Sin movimiento para mantener encedida la ultima luz ocupada
+			if (mainWindow.getHeliLastDir() == 1) {
+                // Frente
+				glm::vec3 forwardDir = glm::normalize(glm::vec3(-1.0f, -0.3f, 0.0f));
+				spotLights[2].SetFlash(heliPosWorld, forwardDir);
+				spotLights[2].SetEnabled(true);
+				spotLights[3].SetEnabled(false);
+			} else if (mainWindow.getHeliLastDir() == -1) {
+                // Atras
+				glm::vec3 backDir = glm::normalize(glm::vec3(1.0f, -0.3f, 0.0f));
+				spotLights[3].SetFlash(heliPosWorld, backDir);
+				spotLights[3].SetEnabled(true);
+				spotLights[2].SetEnabled(false);
+			} else {
+				// Default
+				spotLights[2].SetEnabled(false);
+				spotLights[3].SetEnabled(false);
+			}
+		}
+		prevEliX = currEliX;
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(heliBase));
 		Blackhawk_M.RenderModel();
@@ -654,6 +720,55 @@ std::vector<glm::vec3> carSpotColors = {
 		animalesTexture.UseTexture();
 		meshList[4]->RenderMesh();
 
+		//Aqui se colocan los modelos del pez
+
+		// =====================
+		// PEZ JERÁRQUICO
+		// =====================
+
+		// Nodo padre: cuerpo del pez
+		glm::mat4 pezBase = glm::mat4(1.0f);
+		pezBase = glm::translate(pezBase, glm::vec3(-15.0f, 2.0f, 25.0f)); // posición en escena
+		pezBase = glm::scale(pezBase, glm::vec3(0.8f, 0.8f, 0.8f));         // escala general
+		// Ajusta estas rotaciones según la orientación real del modelo exportado
+		pezBase = glm::rotate(pezBase, -90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		// pezBase = glm::rotate(pezBase, 90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		color = glm::vec3(1.0f, 1.0f, 1.0f);
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(pezBase));
+		cuerpo_pez.RenderModel();
+
+
+		// =====================
+		// ANTENA DEL PEZ
+		// =====================
+		glm::mat4 antenaBase = pezBase;
+
+		// Offset local respecto al cuerpo
+		// AJUSTA estos valores para acomodar la antena en su sitio real
+		antenaBase = glm::translate(antenaBase, glm::vec3(1.2f, 6.5f, -2.2f));
+
+		// Si la antena necesita rotación local, actívala
+		// antenaBase = glm::rotate(antenaBase, 20.0f * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		glm::mat4 antenaModel = antenaBase;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(antenaModel));
+		antena_pez.RenderModel();
+
+
+		// =====================
+		// FOCO DEL PEZ
+		// =====================
+		glm::mat4 focoBase = antenaBase;
+
+		// Offset local respecto a la antena
+		// AJUSTA estos valores para colocar el foco en la punta
+		focoBase = glm::translate(focoBase, glm::vec3(-0.2f, 9.0f, 6.2f));
+
+		glm::mat4 focoModel = focoBase;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(focoModel));
+		foco_pez.RenderModel();
 
 		//Agave ¿qué sucede si lo renderizan antes del coche y el helicóptero?
 		model = glm::mat4(1.0);

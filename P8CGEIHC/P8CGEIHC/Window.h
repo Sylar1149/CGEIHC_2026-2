@@ -21,6 +21,9 @@ public:
 	GLfloat getmuevex() { return muevex; }
  bool getLampOn() { return lampOn; }
  int getSpotColorIndex() { return spotColorIndex; }
+ // Movimiento del helicóptero: 1 = adelante, -1 = atrás, 0 = sin movimiento
+	int heliLastDir;
+	int getHeliLastDir() { return heliLastDir; }
 	bool getShouldClose() {
 		return  glfwWindowShouldClose(mainWindow);}
 	bool* getsKeys() { return keys; }

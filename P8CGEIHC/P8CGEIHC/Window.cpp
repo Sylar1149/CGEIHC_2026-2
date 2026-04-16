@@ -21,6 +21,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	EliZ = 0.0f;
    lampOn = true;
    spotColorIndex = 0;
+   heliLastDir = 0;
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
