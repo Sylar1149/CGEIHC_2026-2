@@ -15,7 +15,7 @@ glm/
 include/
 lib/
 shaders/
-P9CGEIHC/P9CGEIHC/x64
+P9.2CGEIHC/P9CGEIHC/x64
 P9CGEIHC.tlog/
 
 # ===== Temporales =====
@@ -39,6 +39,7 @@ P9CGEIHC.tlog/
 *.zip
 *.bak
 *.jpeg
+*.txt
 
 !practica9_2.cpp
 !fuego.tga
