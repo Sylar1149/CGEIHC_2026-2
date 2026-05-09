@@ -39,5 +39,6 @@ P10CGEIHC.tlog/
 *.zip
 *.bak
 *.jpeg
+*.txt
 
 !practica10keyframes.cpp
